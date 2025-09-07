@@ -1,92 +1,61 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
-const int m = 100;
-int arr[m];
-int n = 0;
-void create()
-{
+int n=0;
+int arr[0];
 
-    cout << "ENTER THE NUMBER OF ELEMENTS IN THE ARRAY:";
+void create() {
+    cout << "Enter number of elements: ";
     cin >> n;
-    cout << endl;
-    cout << "ENTER THE ELEMENTS OF THE ARRAY";
-    for (int i = 0; i < n; i++)
-    {
+     cout << "Enter " << n << " elements: ";
+    for (int i = 0; i < n; i++) {
         cin >> arr[i];
-        cout << endl;
     }
 }
-void display()
-{
-
-    cout << "The elements of the array are";
-    for (int i = 0; i < n; i++)
-    {
-        cout << arr[i] << " ";
+void display(){
+    cout << "Array Elements : " << endl;
+    for(int i=0;i<n;i++){
+        cout << arr[i] << endl;
     }
-    return;
 }
-void insert()
-{
-    int pos;
-    cout << "ENTER AT THE POSTION TO ADD THE ELEMENT";
-    cin >> pos;
-    cout << endl;
-    if (pos >= 0 && pos <= n)
-    {
-        cout << "INVALID POSTION\n";
-    }
-    int num;
-    cout << "ENTER THE NUMBER TO BE ADDED";
+void insert(){
+    int idx,num;
+    cout << "Enter the index: "  ;
+    cin >> idx;
+    cout << "Enter the number: "   ;
     cin >> num;
-    cout << endl;
-    for (int i = n; i > pos; i--)
-    {
-        arr[i] = arr[i - 1];
+     for(int i=n-1;i>=idx;i--){
+        arr[i+1]=arr[i];
+        arr[idx]=num;
+        
     }
-    arr[pos] = num;
     n++;
-    return;
-}
-void deleteElement()
-{
-    int pos;
-    cout << "enter the psotion to delete";
-    cin >> pos;
-    cout << endl;
-    if (pos >= n || pos < 0)
-    {
-        cout << "INVALID POSITION\n";
-        return;
+    for(int i=0;i<n;i++){
+        cout << arr[i] << endl;
     }
-    for (int i = pos; i < n; i++)
-    {
-        arr[i] = arr[i + 1];
+}
+void deleteElement(){
+    int idx;
+    cout << "Enter position to delete (1 to " << n << "): ";
+    cin >> idx;
+    for(int i=idx-1;i<n-1;i++){
+        arr[i]=arr[i+1];
     }
     n--;
-    cout << "ELEMENT DELTED";
-    return;
+
 }
-int searchelement()
-{
-    int search;
-    cout << "ENTER THE ELEMENT TO SEARCH";
-    cin >> search;
-    for (int i = 0; i < n; i++)
-    {
-        if (arr[i] == search)
-        {
-            cout << "Element found at:" << i << endl;
-            break;
+void linearSearch(){
+    int key;
+    cout << "Enter value to search: ";
+    cin >> key;
+    for(int i=0;i<n;i++){
+        if(arr[i]==key){
+            cout << "Element found : " << arr[i] << endl;
         }
     }
-    cout << "Element not found.\n";
 }
-int main()
-{
+int main(){
     int choice;
-    do
-    {
+    do {
         cout << "\n——MENU——\n";
         cout << "1. CREATE\n";
         cout << "2. DISPLAY\n";
@@ -97,30 +66,15 @@ int main()
         cout << "Enter your choice: ";
         cin >> choice;
 
-        switch (choice)
-        {
-        case 1:
-            create();
-            break;
-        case 2:
-            display();
-            break;
-        case 3:
-            insert();
-            break;
-        case 4:
-            deleteElement();
-            break;
-        case 5:
-            searchelement();
-            break;
-        case 6:
-            cout << "Exiting program.\n";
-            break;
-        default:
-            cout << "Invalid choice! Try again.\n";
+        switch(choice) {
+            case 1: create(); break;
+            case 2: display(); break;
+            case 3: insert(); break;
+            case 4: deleteElement(); break;
+            case 5: linearSearch(); break;
+            case 6: cout << "Exiting...\n"; break;
+            default: cout << "Invalid choice.\n";
         }
-    } while (choice != 6);
-
+    } while(choice != 6);
     return 0;
 }
