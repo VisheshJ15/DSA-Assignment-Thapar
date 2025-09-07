@@ -1,68 +1,39 @@
 #include <iostream>
-#include <string>
-
+#include <stack>
+#include <cctype>
 using namespace std;
 
-void push(int stack[], int &top, int item) {
-    top++;
-    stack[top] = item;
-}
+int evaluatePostfix(string exp) {
+    stack<int> s;
 
-int pop(int stack[], int &top) {
-    if (top > -1) {
-        return stack[top--];
-    }
-    return -1;
-}
+    for (int i = 0; i < exp.length(); i++) {
+        char ch = exp[i];
 
-bool isOperator(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/';
-}
+        if (isdigit(ch)) {
+            s.push(ch - '0'); 
+        } 
+        else {
+            int val2 = s.top(); s.pop();
+            int val1 = s.top(); s.pop();
 
-bool isNumericDigit(char c) {
-    return c >= '0' && c <= '9';
-}
-
-int performOperation(char operation, int operand1, int operand2) {
-    if (operation == '+') return operand1 + operand2;
-    if (operation == '-') return operand1 - operand2;
-    if (operation == '*') return operand1 * operand2;
-    if (operation == '/') return operand1 / operand2;
-    return 0;
-}
-
-int evaluatePostfix(string expression) {
-    int n = expression.length();
-    int *stack = new int[n];
-    int top = -1;
-
-    for (int i = 0; i < n; i++) {
-        char currentChar = expression[i];
-
-        if (isNumericDigit(currentChar)) {
-            push(stack, top, currentChar - '0');
-        } else if (isOperator(currentChar)) {
-            int operand2 = pop(stack, top);
-            int operand1 = pop(stack, top);
-            int result = performOperation(currentChar, operand1, operand2);
-            push(stack, top, result);
+            switch (ch) {
+                case '+': s.push(val1 + val2); break;
+                case '-': s.push(val1 - val2); break;
+                case '*': s.push(val1 * val2); break;
+                case '/': s.push(val1 / val2); break;
+            }
         }
     }
-
-    int finalResult = pop(stack, top);
-    delete[] stack;
-    return finalResult;
+    return s.top();
 }
 
 int main() {
-    string postfix_expression;
-    cout << "Enter a postfix expression to evaluate: ";
-    getline(cin, postfix_expression);
+    string postfix;
+    cout << "Enter postfix expression: ";
+    cin >> postfix;
 
-    int result = evaluatePostfix(postfix_expression);
-
-    cout << "Expression: " << postfix_expression << endl;
-    cout << "Result: " << result << endl;
+    int result = evaluatePostfix(postfix);
+    cout << "Result = " << result << endl;
 
     return 0;
 }
