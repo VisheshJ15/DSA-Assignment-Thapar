@@ -32,7 +32,7 @@ void multiplyMatrices(int a[][10], int b[][10], int result[][10], int r1, int c1
     if (c1 != r2)
     {
         return;
-        cout << "Matrix mul plica on not possible (c1 != r2)\n";
+        cout << "Matrix multiplication not possible (c1 != r2)\n";
     }
     for (int i = 0; i < r1; i++)
     {
