@@ -1,90 +1,62 @@
 #include <iostream>
-#include <string>
-
+#include <stack>
 using namespace std;
 
-void push(char stack[], int &top, char item) {
-    top++;
-    stack[top] = item;
-}
-
-char pop(char stack[], int &top) {
-    if (top > -1) {
-        return stack[top--];
-    }
-    return '\0';
-}
-
-char peek(char stack[], int top) {
-    if (top > -1) {
-        return stack[top];
-    }
-    return '\0';
-}
-
-bool isEmpty(int top) {
-    return top == -1;
-}
-
-bool isOperand(char c) {
-    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
-}
-
-int getPrecedence(char op) {
-    if (op == '+' || op == '-') {
-        return 1;
-    }
-    if (op == '*' || op == '/') {
-        return 2;
-    }
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    if (op == '^') return 3;
     return 0;
 }
 
-string infixToPostfix(string infix) {
-    string postfix = "";
-    int n = infix.length();
-    char *stack = new char[n];
-    int top = -1;
+bool isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^');
+}
 
-    for (int i = 0; i < n; i++) {
-        char currentChar = infix[i];
+string infixToPostfix(string exp) {
+    stack<char> s;
+    string result = "";
 
-        if (isOperand(currentChar)) {
-            postfix += currentChar;
-        } else if (currentChar == '(') {
-            push(stack, top, currentChar);
-        } else if (currentChar == ')') {
-            while (!isEmpty(top) && peek(stack, top) != '(') {
-                postfix += pop(stack, top);
+    for (int i = 0; i < exp.length(); i++) {
+        char ch = exp[i];
+
+        if (isalnum(ch)) {
+            result += ch;
+        }
+        else if (ch == '(') {
+            s.push(ch);
+        }
+        else if (ch == ')') {
+            while (!s.empty() && s.top() != '(') {
+                result += s.top();
+                s.pop();
             }
-            if (!isEmpty(top)) {
-                pop(stack, top);
+            if (!s.empty()) s.pop();
+        }
+        else if (isOperator(ch)) {
+            while (!s.empty() && precedence(s.top()) >= precedence(ch)) {
+                result += s.top();
+                s.pop();
             }
-        } else {
-            while (!isEmpty(top) && peek(stack, top) != '(' && getPrecedence(currentChar) <= getPrecedence(peek(stack, top))) {
-                postfix += pop(stack, top);
-            }
-            push(stack, top, currentChar);
+            s.push(ch);
         }
     }
 
-    while (!isEmpty(top)) {
-        postfix += pop(stack, top);
+    while (!s.empty()) {
+        result += s.top();
+        s.pop();
     }
 
-    delete[] stack;
-    return postfix;
+    return result;
 }
 
 int main() {
-    string infix_expression;
-    cout << "Enter an infix expression: ";
-    getline(cin, infix_expression);
+    string infix;
+    cout << "Enter infix expression: ";
+    cin >> infix;
 
-    string postfix_expression = infixToPostfix(infix_expression);
-
-    cout << "Infix:   " << infix_expression << endl;
-    cout << "Postfix: " << postfix_expression << endl;
+    string postfix = infixToPostfix(infix);
+    cout << "Postfix expression: " << postfix << endl;
 
     return 0;
 }
