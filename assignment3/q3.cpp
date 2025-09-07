@@ -1,76 +1,36 @@
 #include <iostream>
-#include <string>
-
+#include <stack>
 using namespace std;
 
-void push(char stack[], int &top, char item) {
-    top++;
-    stack[top] = item;
-}
-
-void pop(int &top) {
-    if (top > -1) {
-        top--;
-    }
-}
-
-char peek(char stack[], int top) {
-    if (top > -1) {
-        return stack[top];
-    }
-    return '\0';
-}
-
-bool isEmpty(int top) {
-    return top == -1;
-}
-
-bool areParenthesesBalanced(string expr) {
-    int n = expr.length();
-    if (n == 0) {
-        return true;
-    }
-
-    char *stack = new char[n];
-    int top = -1;
-
-    for (int i = 0; i < n; i++) {
-        char currentChar = expr[i];
-
-        if (currentChar == '(' || currentChar == '{' || currentChar == '[') {
-            push(stack, top, currentChar);
-        } else if (currentChar == ')' || currentChar == '}' || currentChar == ']') {
-            if (isEmpty(top)) {
-                delete[] stack;
-                return false;
-            }
-            
-            char topChar = peek(stack, top);
-            if ((currentChar == ')' && topChar == '(') ||
-                (currentChar == '}' && topChar == '{') ||
-                (currentChar == ']' && topChar == '[')) {
-                pop(top);
-            } else {
-                delete[] stack;
+bool isBalanced(string exp) {
+    stack<char> s;
+    for (int i = 0; i < exp.length(); i++) {
+        char ch = exp[i];
+        if (ch == '(' || ch == '{' || ch == '[') {
+            s.push(ch);
+        } else if (ch == ')' || ch == '}' || ch == ']') {
+            if (s.empty()) return false;
+            char top = s.top();
+            s.pop();
+            if ((ch == ')' && top != '(') ||
+                (ch == '}' && top != '{') ||
+                (ch == ']' && top != '[')) {
                 return false;
             }
         }
     }
-
-    bool result = isEmpty(top);
-    delete[] stack;
-    return result;
+    return s.empty();
 }
 
 int main() {
-    string expression;
-    cout << "Enter an expression to check: ";
-    getline(cin, expression);
+    string exp;
+    cout << "Enter an expression: ";
+    cin >> exp;
 
-    if (areParenthesesBalanced(expression)) {
-        cout << "The expression has balanced parentheses." << endl;
+    if (isBalanced(exp)) {
+        cout << "Expression has balanced parentheses." << endl;
     } else {
-        cout << "The expression does not have balanced parentheses." << endl;
+        cout << "Expression does not have balanced parentheses." << endl;
     }
 
     return 0;
